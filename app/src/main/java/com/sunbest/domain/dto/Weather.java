@@ -7,12 +7,7 @@ import androidx.annotation.Nullable;
  */
 public class Weather {
 
-    /**
-     * pm2.5
-     * 未查到为空
-     */
-    @Nullable
-    private String pm25;
+
 
     /**
      * 降雨量
@@ -42,14 +37,7 @@ public class Weather {
     @Nullable
     private String temp;
 
-    @Nullable
-    public String getPm25() {
-        return pm25;
-    }
 
-    public void setPm25(@Nullable String pm25) {
-        this.pm25 = pm25;
-    }
 
     @Nullable
     public String getPnpc() {
@@ -90,8 +78,7 @@ public class Weather {
     @Override
     public String toString() {
         return "Weather{" +
-                "pm25='" + pm25 + '\'' +
-                ", pnpc='" + pnpc + '\'' +
+                "pnpc='" + pnpc + '\'' +
                 ", wind_dir='" + wind_dir + '\'' +
                 ", wind_sc='" + wind_sc + '\'' +
                 ", temp='" + temp + '\'' +

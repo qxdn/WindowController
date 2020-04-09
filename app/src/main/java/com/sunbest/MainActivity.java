@@ -6,13 +6,13 @@ import android.os.Bundle;
 
 import interfaces.heweather.com.interfacesmodule.view.HeConfig;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        HeConfig.init("uname","key");
+        //TODO:权限申请
     }
 }
