@@ -37,7 +37,7 @@ public class RoofInfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = ViewModelProviders.of(this).get(RoofInfoViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(RoofInfoViewModel.class);
         mViewModel.setApplication(Objects.requireNonNull(getActivity()).getApplication());
         final RoofInfoFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.roof_info_fragment, container, false);
         mViewModel.getWeather().observe(requireActivity(), new Observer<Weather>() {

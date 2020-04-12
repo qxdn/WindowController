@@ -55,6 +55,7 @@ public class WeatherServiceImpl implements WeatherService {
                     Log.d(TAG, " Weather Now onSuccess: " + new Gson().toJson(now));
                     //此时返回数据
                     NowBase nowBase = now.getNow();
+                    weather.setState(nowBase.getCond_txt());
                     weather.setPnpc(nowBase.getPcpn());
                     weather.setTemp(nowBase.getTmp());
                     weather.setWind_dir(nowBase.getWind_dir());

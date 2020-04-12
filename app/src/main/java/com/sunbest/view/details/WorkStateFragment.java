@@ -33,7 +33,6 @@ public class WorkStateFragment extends Fragment {
 
     private WorkStateViewModel mViewModel;
 
-    private RoofState currentRoofState;
 
     public static WorkStateFragment newInstance() {
         return new WorkStateFragment();
@@ -42,13 +41,12 @@ public class WorkStateFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel= ViewModelProviders.of(this).get(WorkStateViewModel.class);
+        mViewModel= ViewModelProviders.of(getActivity()).get(WorkStateViewModel.class);
         final WorkStateFragmentBinding binding= DataBindingUtil.inflate(inflater,R.layout.work_state_fragment,container,false);
         mViewModel.getRoofState().observe(requireActivity(), new Observer<RoofState>() {
             @Override
             public void onChanged(RoofState roofState) {
                 Log.d(TAG,"on roofState Change");
-                currentRoofState=roofState;
                 binding.textView44.setText(roofState.getRuntime());
                 binding.textView45.setText(roofState.getElectricState());
                 //TODO:完善

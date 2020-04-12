@@ -27,6 +27,11 @@ public class ElectricState {
      */
     private double[] aWeekElectrics;
 
+    /**
+     * 上小时发电
+     */
+    private double lastHourElectric;
+
     public double getAverageDayElectric() {
         return averageDayElectric;
     }
@@ -59,6 +64,14 @@ public class ElectricState {
         this.aWeekElectrics = aWeekElectrics;
     }
 
+    public double getLastHourElectric() {
+        return lastHourElectric;
+    }
+
+    public void setLastHourElectric(double lastHourElectric) {
+        this.lastHourElectric = lastHourElectric;
+    }
+
     @Override
     public String toString() {
         return "ElectricState{" +
@@ -66,6 +79,7 @@ public class ElectricState {
                 ", allDayElectric=" + allDayElectric +
                 ", weeklyElectric=" + weeklyElectric +
                 ", aWeekElectrics=" + Arrays.toString(aWeekElectrics) +
+                ", lastHourElectric=" + lastHourElectric +
                 '}';
     }
 }

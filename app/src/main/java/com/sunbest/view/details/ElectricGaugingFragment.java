@@ -1,6 +1,7 @@
 package com.sunbest.view.details;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.sunbest.R;
 import com.sunbest.databinding.ElectricGaugingFragmentBinding;
+import com.sunbest.model.ElectricState;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
 
 import java.util.ArrayList;
@@ -40,8 +42,18 @@ public class ElectricGaugingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = ViewModelProviders.of(this).get(ElectricGaugingViewModel.class);
-        ElectricGaugingFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.electric_gauging_fragment, container, false);
+        mViewModel = ViewModelProviders.of(getActivity()).get(ElectricGaugingViewModel.class);
+        final ElectricGaugingFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.electric_gauging_fragment, container, false);
+        mViewModel.getElectricState().observe(requireActivity(), new Observer<ElectricState>() {
+            @Override
+            public void onChanged(ElectricState electricState) {
+                //TODO:
+                binding.textView14.setText(electricState.getAllDayElectric()+"KW/h");
+                binding.textView15.setText(electricState.getWeeklyElectric()+"kW/h");
+                binding.textView16.setText(electricState.getAverageDayElectric()+"KW/h");
+                binding.textView17.setText(electricState.getLastHourElectric()+"KW/h");
+            }
+        });
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
 
