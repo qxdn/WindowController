@@ -20,6 +20,8 @@ import com.sunbest.R;
 import com.sunbest.databinding.WorkStateFragmentBinding;
 import com.sunbest.model.RoofState;
 import com.sunbest.model.WindowsState;
+import com.sunbest.service.MqttClientService;
+import com.sunbest.service.impl.MqttClientServiceImpl;
 import com.sunbest.viewmodel.WorkStateViewModel;
 
 import org.angmarch.views.NiceSpinner;
@@ -33,6 +35,7 @@ public class WorkStateFragment extends Fragment {
 
     private WorkStateViewModel mViewModel;
 
+    private MqttClientService client= MqttClientServiceImpl.getInstance();
 
     public static WorkStateFragment newInstance() {
         return new WorkStateFragment();
@@ -62,6 +65,17 @@ public class WorkStateFragment extends Fragment {
                 }
             }
         });
+        binding.sendAngle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String angle=binding.angle.getText().toString();
+                //TODO:验证
+                if(client.isConnected()){
+                    client.controlAngle(Double.parseDouble(angle));
+                }
+            }
+        });
+
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();

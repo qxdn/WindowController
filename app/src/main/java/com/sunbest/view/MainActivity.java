@@ -3,17 +3,29 @@ package com.sunbest.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.sunbest.R;
+import com.sunbest.listener.MqttMessageListener;
+import com.sunbest.model.ElectricState;
+import com.sunbest.model.MqttSetting;
+import com.sunbest.model.RoofState;
+import com.sunbest.service.MqttClientService;
+import com.sunbest.service.impl.MqttClientServiceImpl;
+import com.sunbest.viewmodel.ElectricGaugingViewModel;
+import com.sunbest.viewmodel.WorkStateViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int BAIDU_READ_PHONE_STATE = 100;//定位权限请求
     private static final int PRIVATE_CODE = 1315;//开启GPS权限
+
+    private WorkStateViewModel workStateViewModel;
+    private ElectricGaugingViewModel electricGaugingViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,5 +44,26 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_SHORT).show();
             }
         }
+
+        workStateViewModel= ViewModelProviders.of(this).get(WorkStateViewModel.class);
+        electricGaugingViewModel=ViewModelProviders.of(this).get(ElectricGaugingViewModel.class);
+
+        MqttClientService client= MqttClientServiceImpl.getInstance();
+        MqttSetting setting=new MqttSetting();
+        setting.setUsername("androidClient");
+        setting.setPassword("123456");
+        //TODO:换成设备id
+        setting.setClientId("1233");
+        client.init(getApplicationContext(), setting, new MqttMessageListener() {
+            @Override
+            public void onRoofStateArrived(RoofState roofState) {
+                workStateViewModel.getRoofState().postValue(roofState);
+            }
+
+            @Override
+            public void onElectricStateArrived(ElectricState electricState) {
+                electricGaugingViewModel.getElectricState().postValue(electricState);
+            }
+        });
     }
 }
