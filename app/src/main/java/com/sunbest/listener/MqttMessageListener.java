@@ -1,7 +1,8 @@
 package com.sunbest.listener;
 
-import com.sunbest.domain.dto.ElectricState;
-import com.sunbest.domain.dto.RoofState;
+
+import com.sunbest.model.ElectricState;
+import com.sunbest.model.RoofState;
 
 /**
  * mqtt消息返回

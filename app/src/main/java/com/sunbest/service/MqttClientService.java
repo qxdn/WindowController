@@ -2,8 +2,9 @@ package com.sunbest.service;
 
 import android.content.Context;
 
-import com.sunbest.domain.dto.MqttSetting;
 import com.sunbest.listener.MqttMessageListener;
+import com.sunbest.model.MqttSetting;
+
 
 public interface MqttClientService {
     /**
@@ -31,10 +32,10 @@ public interface MqttClientService {
      * @param winId 控制的天窗
      * @param state 天窗状态 true为开
      */
-    public void controlWindows(Integer winId,Boolean state);
+    public void controlWindows(Integer winId, Boolean state);
 
     /**
-     * 向硬件发起获取屋顶状态请求 结果再回调中
+     * 向硬件发起获取屋顶状态请求 结果在回调中
      */
     public void toGetRoofState();
 

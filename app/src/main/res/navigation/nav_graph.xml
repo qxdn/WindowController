@@ -6,58 +6,28 @@
     app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/workStateFragment"
-        android:name="com.sunbest.ui.details.WorkStateFragment"
-        android:label="fragment_work_state"
-        tools:layout="@layout/fragment_work_state" >
-        <action
-            android:id="@+id/action_workStateFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/electricGaugingFragment"
-        android:name="com.sunbest.ui.details.ElectricGaugingFragment"
-        android:label="fragment_electric_gauging"
-        tools:layout="@layout/fragment_electric_gauging" >
-        <action
-            android:id="@+id/action_electricGaugingFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/loginFragment"
-        android:name="com.sunbest.ui.login.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:name="com.sunbest.view.login.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment" >
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/roofInfoFragment"
-        android:name="com.sunbest.ui.details.RoofInfoFragment"
-        android:label="fragment_roof_info"
-        tools:layout="@layout/fragment_roof_info" >
+        android:name="com.sunbest.view.details.RoofInfoFragment"
+        android:label="roof_info_fragment"
+        tools:layout="@layout/roof_info_fragment" >
         <action
             android:id="@+id/action_roofInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/userCenterFragment"
-        android:name="com.sunbest.ui.details.UserCenterFragment"
-        android:label="fragment_user_center"
-        tools:layout="@layout/fragment_user_center" >
-        <action
-            android:id="@+id/action_userCenterFragment_to_homeFragment2"
-            app:destination="@id/homeFragment" />
-        <action
-            android:id="@+id/action_userCenterFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/homeFragment"
-        android:name="com.sunbest.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:name="com.sunbest.view.home.HomeFragment"
+        android:label="home_fragment"
+        tools:layout="@layout/home_fragment" >
         <action
             android:id="@+id/action_homeFragment_to_roofInfoFragment"
             app:destination="@id/roofInfoFragment" />
@@ -70,5 +40,32 @@
         <action
             android:id="@+id/action_homeFragment_to_electricGaugingFragment"
             app:destination="@id/electricGaugingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userCenterFragment"
+        android:name="com.sunbest.view.details.UserCenterFragment"
+        android:label="user_center_fragment"
+        tools:layout="@layout/user_center_fragment" >
+        <action
+            android:id="@+id/action_userCenterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workStateFragment"
+        android:name="com.sunbest.view.details.WorkStateFragment"
+        android:label="work_state_fragment"
+        tools:layout="@layout/work_state_fragment" >
+        <action
+            android:id="@+id/action_workStateFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/electricGaugingFragment"
+        android:name="com.sunbest.view.details.ElectricGaugingFragment"
+        android:label="electric_gauging_fragment"
+        tools:layout="@layout/electric_gauging_fragment" >
+        <action
+            android:id="@+id/action_electricGaugingFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

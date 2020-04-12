@@ -3,12 +3,12 @@ package com.sunbest.service.impl;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.sunbest.domain.dto.Air;
-import com.sunbest.domain.dto.Weather;
 import com.sunbest.listener.AirListener;
 import com.sunbest.listener.WeatherListener;
+import com.sunbest.model.Air;
+import com.sunbest.model.Weather;
 import com.sunbest.service.WeatherService;
+import com.google.gson.Gson;
 
 import interfaces.heweather.com.interfacesmodule.bean.Code;
 import interfaces.heweather.com.interfacesmodule.bean.air.now.AirNow;
@@ -29,7 +29,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private WeatherServiceImpl(){
-        HeConfig.init("uname","key");
+        HeConfig.init("HE2004091554271830","9d25f4e6ce4d4c148fb38a532b32d495");
     }
 
 

@@ -1,7 +1,6 @@
 package com.sunbest.service;
 
 import android.content.Context;
-
 import com.sunbest.listener.AirListener;
 import com.sunbest.listener.WeatherListener;
 

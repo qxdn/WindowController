@@ -3,11 +3,11 @@ package com.sunbest.service.impl;
 import android.content.Context;
 import android.util.Log;
 
-import com.sunbest.domain.dto.ElectricState;
-import com.sunbest.domain.dto.MqttSetting;
-import com.sunbest.domain.dto.RoofState;
-import com.sunbest.domain.dto.WindowsState;
 import com.sunbest.listener.MqttMessageListener;
+import com.sunbest.model.ElectricState;
+import com.sunbest.model.MqttSetting;
+import com.sunbest.model.RoofState;
+import com.sunbest.model.WindowsState;
 import com.sunbest.service.MqttClientService;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -54,7 +54,7 @@ public class MqttClientServiceImpl implements MqttClientService {
     }
 
     @Override
-    public void init(Context context, MqttSetting mqttSetting,MqttMessageListener mqttMessageListener){
+    public void init(Context context, MqttSetting mqttSetting, MqttMessageListener mqttMessageListener){
         this.mqttMessageListener=mqttMessageListener;
         //创建mqtt客户端
         client=new MqttAndroidClient(context,host,mqttSetting.getClientId());

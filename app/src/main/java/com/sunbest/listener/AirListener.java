@@ -1,6 +1,7 @@
 package com.sunbest.listener;
 
-import com.sunbest.domain.dto.Air;
+
+import com.sunbest.model.Air;
 
 public interface AirListener {
     public void onGetAir(Air air);
