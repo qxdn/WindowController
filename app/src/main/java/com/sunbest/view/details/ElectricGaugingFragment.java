@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ElectricGaugingFragment extends Fragment {
+    private static final String TAG="ElectricGaugingFragment";
 
     private ElectricGaugingViewModel mViewModel;
 
@@ -47,6 +49,7 @@ public class ElectricGaugingFragment extends Fragment {
         mViewModel.getElectricState().observe(requireActivity(), new Observer<ElectricState>() {
             @Override
             public void onChanged(ElectricState electricState) {
+                Log.d(TAG,"electricState Change");
                 //TODO:
                 binding.textView14.setText(electricState.getAllDayElectric()+"KW/h");
                 binding.textView15.setText(electricState.getWeeklyElectric()+"kW/h");
