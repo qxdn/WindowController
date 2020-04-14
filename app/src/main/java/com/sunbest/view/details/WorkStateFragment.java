@@ -2,7 +2,6 @@ package com.sunbest.view.details;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -10,6 +9,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,11 +26,11 @@ import com.sunbest.model.WindowsState;
 import com.sunbest.service.MqttClientService;
 import com.sunbest.service.impl.MqttClientServiceImpl;
 import com.sunbest.viewmodel.WorkStateViewModel;
-
-import org.angmarch.views.NiceSpinner;
+import com.sunbest.worker.RoofStateWorker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WorkStateFragment extends Fragment {
 
@@ -36,6 +39,8 @@ public class WorkStateFragment extends Fragment {
     private WorkStateViewModel mViewModel;
 
     private MqttClientService client= MqttClientServiceImpl.getInstance();
+
+    private PeriodicWorkRequest workRequest;
 
     public static WorkStateFragment newInstance() {
         return new WorkStateFragment();
@@ -76,11 +81,25 @@ public class WorkStateFragment extends Fragment {
             }
         });
 
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
+                .build();
+        //最短15分钟
+        workRequest=new PeriodicWorkRequest.Builder(RoofStateWorker.class,15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
-
+    @Override
+    public void onDestroy() {
+        WorkManager.getInstance().cancelWorkById(workRequest.getId());
+        super.onDestroy();
+    }
 
 }

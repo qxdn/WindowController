@@ -46,4 +46,5 @@ dependencies {
     implementation files('libs/HeWeather_Public_Android_V3.3.jar')
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    implementation "androidx.work:work-runtime:2.3.1"
 }

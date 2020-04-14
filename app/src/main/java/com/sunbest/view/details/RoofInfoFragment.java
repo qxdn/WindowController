@@ -1,7 +1,6 @@
 package com.sunbest.view.details;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -11,24 +10,37 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.sunbest.R;
 import com.sunbest.databinding.RoofInfoFragmentBinding;
+import com.sunbest.listener.AirListener;
+import com.sunbest.listener.WeatherListener;
 import com.sunbest.model.Air;
 import com.sunbest.model.Weather;
+import com.sunbest.service.WeatherService;
+import com.sunbest.service.impl.WeatherServiceImpl;
 import com.sunbest.viewmodel.RoofInfoViewModel;
-
 import java.util.Objects;
+
 
 public class RoofInfoFragment extends Fragment {
     private static final String TAG="RoofInfoFragment";
 
     private RoofInfoViewModel mViewModel;
+
+    private Handler handler;
+
+    private Runnable runnable;
+
+    private WeatherService weatherService= WeatherServiceImpl.getInstance();
+
+    //1分钟
+    private long weatherDelay=60000;
 
     public static RoofInfoFragment newInstance() {
         return new RoofInfoFragment();
@@ -38,7 +50,6 @@ public class RoofInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = ViewModelProviders.of(getActivity()).get(RoofInfoViewModel.class);
-        mViewModel.setApplication(Objects.requireNonNull(getActivity()).getApplication());
         final RoofInfoFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.roof_info_fragment, container, false);
         mViewModel.getWeather().observe(requireActivity(), new Observer<Weather>() {
             @Override
@@ -65,9 +76,37 @@ public class RoofInfoFragment extends Fragment {
                 binding.textView29.setText(air.getAqi());
             }
         });
+        handler=new Handler();
+        runnable=new Runnable() {
+            @Override
+            public void run() {
+                weatherService.getWeather(requireContext(), new WeatherListener() {
+                    @Override
+                    public void onGetWeather(Weather weather) {
+                        mViewModel.getWeather().postValue(weather);
+                    }
+                });
+                weatherService.getAir(requireContext(), new AirListener() {
+                    @Override
+                    public void onGetAir(Air air) {
+                        mViewModel.getAir().postValue(air);
+                    }
+                });
+                //持续进行
+                handler.postDelayed(this, weatherDelay);
+            }
+        };
+        //10ms后启动
+        handler.postDelayed(runnable, 10);
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        Log.i(TAG,TAG+ "onDestroy");
+        handler.removeCallbacks(runnable);
+        super.onDestroy();
+    }
 }

@@ -9,6 +9,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,14 +32,18 @@ import com.sunbest.R;
 import com.sunbest.databinding.ElectricGaugingFragmentBinding;
 import com.sunbest.model.ElectricState;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
+import com.sunbest.worker.ElectricStateWorker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ElectricGaugingFragment extends Fragment {
     private static final String TAG="ElectricGaugingFragment";
 
     private ElectricGaugingViewModel mViewModel;
+
+    private PeriodicWorkRequest workRequest;
 
     public static ElectricGaugingFragment newInstance() {
         return new ElectricGaugingFragment();
@@ -57,6 +65,16 @@ public class ElectricGaugingFragment extends Fragment {
                 binding.textView17.setText(electricState.getLastHourElectric()+"KW/h");
             }
         });
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
+                .build();
+        //最短15分钟
+        workRequest=new PeriodicWorkRequest.Builder(ElectricStateWorker.class,15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
 
@@ -109,4 +127,9 @@ public class ElectricGaugingFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        WorkManager.getInstance().cancelWorkById(workRequest.getId());
+        super.onDestroy();
+    }
 }
