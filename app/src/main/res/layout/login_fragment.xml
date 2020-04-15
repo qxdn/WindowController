@@ -61,8 +61,8 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:ems="10"
-            android:hint="请输入用户名"
-            android:inputType="textPersonName"
+            android:hint="请输入邮箱"
+            android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline3" />

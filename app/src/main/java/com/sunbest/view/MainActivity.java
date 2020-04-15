@@ -16,6 +16,7 @@ import com.sunbest.model.MqttSetting;
 import com.sunbest.model.RoofState;
 import com.sunbest.service.MqttClientService;
 import com.sunbest.service.impl.MqttClientServiceImpl;
+import com.sunbest.util.IDUtil;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
 import com.sunbest.viewmodel.WorkStateViewModel;
 
@@ -32,12 +33,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)!=PackageManager.PERMISSION_GRANTED) {
             //请求权限
             String[] permissions = new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.RECORD_AUDIO
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.READ_PHONE_STATE
             };
             ActivityCompat.requestPermissions(this, permissions, PRIVATE_CODE);
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
@@ -52,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
         MqttSetting setting=new MqttSetting();
         setting.setUsername("androidClient");
         setting.setPassword("123456");
-        //TODO:换成设备id
-        setting.setClientId("1233");
+        setting.setClientId(IDUtil.getDeviceID(getApplicationContext()));
         client.init(getApplicationContext(), setting, new MqttMessageListener() {
             @Override
             public void onRoofStateArrived(RoofState roofState) {
