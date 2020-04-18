@@ -68,7 +68,7 @@ public class LoginFragment extends Fragment {
                         .build();
 
                 Request request=new Request.Builder()
-                        .url("http://101.133.235.188:8080/api/v1/androidLogin")
+                        .url("http://101.133.235.188:80/api/v1/androidLogin")
                         .post(requestBody)
                         .build();
 

@@ -78,13 +78,13 @@ public class WeatherServiceImpl implements WeatherService {
             Air air=new Air();
             @Override
             public void onError(Throwable throwable) {
-                Log.e(TAG,"WeatherNow getError：",throwable);
+                Log.e(TAG,"AirNow getError：",throwable);
                 airListener.onGetAir(air);
             }
 
             @Override
             public void onSuccess(AirNow airNow) {
-                Log.i(TAG,"WeatherNow getSuccess with status:"+airNow.getStatus());
+                Log.i(TAG,"AirNow getSuccess with status:"+airNow.getStatus());
                 //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
                 if ( Code.OK.getCode().equalsIgnoreCase(airNow.getStatus()) ){
                     Log.i(TAG,"true status");
@@ -99,7 +99,7 @@ public class WeatherServiceImpl implements WeatherService {
                     //在此查看返回数据失败的原因
                     String status = airNow.getStatus();
                     Code code = Code.toEnum(status);
-                    Log.i(TAG, "failed code: " + code);
+                    Log.i(TAG, "AirNow failed code: " + code);
                 }
                 airListener.onGetAir(air);
             }

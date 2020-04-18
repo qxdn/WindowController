@@ -40,7 +40,7 @@ public class RoofInfoFragment extends Fragment {
     private WeatherService weatherService= WeatherServiceImpl.getInstance();
 
     //1分钟
-    private long weatherDelay=60000;
+    private long weatherDelay=5000;
 
     public static RoofInfoFragment newInstance() {
         return new RoofInfoFragment();

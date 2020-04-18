@@ -106,13 +106,13 @@ public class ElectricGaugingFragment extends Fragment {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 List<String> list = new ArrayList<>();
-                list.add("4月1日");
-                list.add("4月2日");
-                list.add("4月3日");
-                list.add("4月4日");
-                list.add("4月5日");
-                list.add("4月6日");
-                list.add("4月7日");
+                list.add("4月12日");
+                list.add("4月13日");
+                list.add("4月14日");
+                list.add("4月15日");
+                list.add("4月16日");
+                list.add("4月17日");
+                list.add("4月18日");
                 return list.get((int) value);
             }
         });

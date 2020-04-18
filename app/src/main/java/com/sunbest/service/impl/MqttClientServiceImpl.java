@@ -26,7 +26,7 @@ public class MqttClientServiceImpl implements MqttClientService {
     private static final String TAG="MQTT";
 
     //mqtt服务器位置
-    private String host="tcp://192.168.124.8:1883";
+    private String host="tcp://101.133.235.188:1883";
     //订阅信息
     private String[] subTopics=new String[]{"electric","roof"};
     //发布信息主题
