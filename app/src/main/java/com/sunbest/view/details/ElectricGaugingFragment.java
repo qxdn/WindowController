@@ -31,6 +31,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.sunbest.R;
 import com.sunbest.databinding.ElectricGaugingFragmentBinding;
 import com.sunbest.model.ElectricState;
+import com.sunbest.util.DateUtil;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
 import com.sunbest.worker.ElectricStateWorker;
 
@@ -105,14 +106,7 @@ public class ElectricGaugingFragment extends Fragment {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                List<String> list = new ArrayList<>();
-                list.add("4月12日");
-                list.add("4月13日");
-                list.add("4月14日");
-                list.add("4月15日");
-                list.add("4月16日");
-                list.add("4月17日");
-                list.add("4月18日");
+                List<String> list = DateUtil.getWeek();
                 return list.get((int) value);
             }
         });

@@ -57,19 +57,24 @@ public class WorkStateFragment extends Fragment {
                 Log.d(TAG,"on roofState Change");
                 binding.textView44.setText(roofState.getRuntime());
                 binding.textView45.setText(roofState.getElectricState());
-                //TODO:完善
-                if(roofState.getWindowsStates().size()>0) {
-                    List<String> datasets = new ArrayList<>();
-                    for (WindowsState windowsState : roofState.getWindowsStates()) {
-                        datasets.add("天窗" + roofState.getWindowsStates().indexOf(windowsState));
-                    }
-                    binding.windowsSpinner1.attachDataSource(datasets);
-                    binding.windowsSpinner2.attachDataSource(datasets);
-                }else {
-
-                }
+//                //TODO:完善
+//                if(roofState.getWindowsStates().size()>0) {
+//                    List<String> datasets = new ArrayList<>();
+//                    for (WindowsState windowsState : roofState.getWindowsStates()) {
+//                        datasets.add("天窗" + roofState.getWindowsStates().indexOf(windowsState));
+//                    }
+//                    binding.windowsSpinner1.attachDataSource(datasets);
+//                    binding.windowsSpinner2.attachDataSource(datasets);
+//                }else {
+//
+//                }
             }
         });
+        List<String> dataSets = new ArrayList<>();
+        for (int i=0;i<5; i++) {
+                dataSets.add("天窗"+i);
+         }
+        binding.windowsSpinner1.attachDataSource(dataSets);
         binding.sendAngle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

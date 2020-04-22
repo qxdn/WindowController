@@ -16,8 +16,10 @@ public class WorkStateViewModel extends ViewModel {
     public MutableLiveData<RoofState> getRoofState() {
         if(roofState==null){
             RoofState roofState1=new RoofState();
-            roofState1.setElectricState("未知");
-            roofState1.setRuntime("未知");
+//            roofState1.setElectricState("未知");
+//            roofState1.setRuntime("未知");
+            roofState1.setElectricState("正常");
+            roofState1.setRuntime("2时3分15秒");
             List<WindowsState> windowsStates=new ArrayList<>();
             roofState1.setWindowsStates(windowsStates);
             roofState=new MutableLiveData<RoofState>(roofState1);

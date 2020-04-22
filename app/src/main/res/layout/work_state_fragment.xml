@@ -146,11 +146,11 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="90dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="90dp"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@+id/guideline36"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline37"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -174,20 +174,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <org.angmarch.views.NiceSpinner
-                android:id="@+id/windowsSpinner2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="40dp"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline37"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline36"
-                />
+
             <Switch
                 android:id="@+id/switch2"
                 android:layout_width="0dp"
@@ -262,6 +249,7 @@
                 android:id="@+id/sendAngle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
                 android:text="发送"
                 android:background="@color/yellow"
                 app:layout_constraintStart_toStartOf="@+id/angleGuideline"
