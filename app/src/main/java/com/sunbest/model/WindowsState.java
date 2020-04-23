@@ -8,26 +8,34 @@ public class WindowsState {
     /**
      * 工作状态 true为正常
      */
-    private Boolean workState;
+    private boolean workState;
 
     /**
      * 是否开合 true为打开
      */
-    private Boolean switchState;
+    private boolean switchState;
 
-    public Boolean getWorkState() {
+    public WindowsState() {
+    }
+
+    public WindowsState(boolean workState, boolean switchState) {
+        this.workState = workState;
+        this.switchState = switchState;
+    }
+
+    public boolean getWorkState() {
         return workState;
     }
 
-    public void setWorkState(Boolean workState) {
+    public void setWorkState(boolean workState) {
         this.workState = workState;
     }
 
-    public Boolean getSwitchState() {
+    public boolean getSwitchState() {
         return switchState;
     }
 
-    public void setSwitchState(Boolean switchState) {
+    public void setSwitchState(boolean switchState) {
         this.switchState = switchState;
     }
 

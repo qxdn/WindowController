@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import com.sunbest.R;
 import com.sunbest.databinding.WorkStateFragmentBinding;
@@ -27,6 +28,9 @@ import com.sunbest.service.MqttClientService;
 import com.sunbest.service.impl.MqttClientServiceImpl;
 import com.sunbest.viewmodel.WorkStateViewModel;
 import com.sunbest.worker.RoofStateWorker;
+
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,30 +55,56 @@ public class WorkStateFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mViewModel= ViewModelProviders.of(getActivity()).get(WorkStateViewModel.class);
         final WorkStateFragmentBinding binding= DataBindingUtil.inflate(inflater,R.layout.work_state_fragment,container,false);
+        List<String> dataSets = new ArrayList<>();
+        for (int i=0;i<5; i++) {
+            dataSets.add("天窗"+i);
+        }
+        binding.windowsSpinner1.attachDataSource(dataSets);
+        /**
+         * 选择事件
+         */
+        binding.windowsSpinner1.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                RoofState roofState= mViewModel.getRoofState().getValue();
+                WindowsState windowsState=roofState.getWindowsStates().get(position);
+                if(windowsState.getWorkState()){
+                    binding.windowsState.setText("正常");
+                }else {
+                    binding.windowsState.setText("未知");
+                }
+                binding.switch2.setChecked(windowsState.getSwitchState());
+            }
+        });
+
+        binding.switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO: 发送硬件
+            }
+        });
+        /**
+         * ViewModel更新事件
+         */
         mViewModel.getRoofState().observe(requireActivity(), new Observer<RoofState>() {
             @Override
             public void onChanged(RoofState roofState) {
                 Log.d(TAG,"on roofState Change");
                 binding.textView44.setText(roofState.getRuntime());
                 binding.textView45.setText(roofState.getElectricState());
-//                //TODO:完善
-//                if(roofState.getWindowsStates().size()>0) {
-//                    List<String> datasets = new ArrayList<>();
-//                    for (WindowsState windowsState : roofState.getWindowsStates()) {
-//                        datasets.add("天窗" + roofState.getWindowsStates().indexOf(windowsState));
-//                    }
-//                    binding.windowsSpinner1.attachDataSource(datasets);
-//                    binding.windowsSpinner2.attachDataSource(datasets);
-//                }else {
-//
-//                }
+                int index= binding.windowsSpinner1.getSelectedIndex();
+                WindowsState windowsState=roofState.getWindowsStates().get(index);
+                if(windowsState.getWorkState()){
+                    binding.windowsState.setText("正常");
+                }else {
+                    binding.windowsState.setText("未知");
+                }
+                binding.switch2.setChecked(windowsState.getSwitchState());
             }
         });
-        List<String> dataSets = new ArrayList<>();
-        for (int i=0;i<5; i++) {
-                dataSets.add("天窗"+i);
-         }
-        binding.windowsSpinner1.attachDataSource(dataSets);
+        /**
+         * 发送角度事件
+         */
         binding.sendAngle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +116,9 @@ public class WorkStateFragment extends Fragment {
             }
         });
 
+        /**
+         * 后台任务
+         */
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
                 .build();

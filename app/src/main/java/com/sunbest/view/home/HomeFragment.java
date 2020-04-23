@@ -34,6 +34,7 @@ public class HomeFragment extends Fragment {
         HomeFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false);
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
+        binding.switch1.setChecked(true);
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

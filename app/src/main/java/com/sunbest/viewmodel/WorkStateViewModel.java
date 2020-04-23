@@ -21,6 +21,9 @@ public class WorkStateViewModel extends ViewModel {
             roofState1.setElectricState("正常");
             roofState1.setRuntime("2时3分15秒");
             List<WindowsState> windowsStates=new ArrayList<>();
+            for(int i=0;i<5;i++){
+                windowsStates.add(new WindowsState(true,true));
+            }
             roofState1.setWindowsStates(windowsStates);
             roofState=new MutableLiveData<RoofState>(roofState1);
         }
