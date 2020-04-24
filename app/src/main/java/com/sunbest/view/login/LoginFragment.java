@@ -1,6 +1,7 @@
 package com.sunbest.view.login;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.sunbest.R;
 import com.sunbest.databinding.LoginFragmentBinding;
 import com.sunbest.viewmodel.LoginViewModel;
+import com.sunbest.viewmodel.UserCenterViewModel;
 
 import java.io.IOException;
 
@@ -41,7 +43,7 @@ public class LoginFragment extends Fragment {
     private LoginFragmentBinding binding;
     private static final String TAG="LoginFragment";
 
-
+    private UserCenterViewModel userCenterViewModel;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -50,6 +52,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        userCenterViewModel=ViewModelProviders.of(getActivity()).get(UserCenterViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false);
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
@@ -87,6 +90,7 @@ public class LoginFragment extends Fragment {
                         String json=response.body().string();
                         Log.i(TAG, "onResponse: "+json);
                         if(json.equals("true")){
+                            userCenterViewModel.setEmail(new MutableLiveData<String>(email));
                             NavController controller = Navigation.findNavController(v);
                             controller.navigate(R.id.action_loginFragment_to_homeFragment);
                         }else {
