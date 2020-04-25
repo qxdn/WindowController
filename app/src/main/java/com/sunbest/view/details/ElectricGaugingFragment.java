@@ -46,6 +46,8 @@ public class ElectricGaugingFragment extends Fragment {
 
     private PeriodicWorkRequest workRequest;
 
+
+
     public static ElectricGaugingFragment newInstance() {
         return new ElectricGaugingFragment();
     }
@@ -55,31 +57,7 @@ public class ElectricGaugingFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mViewModel = ViewModelProviders.of(getActivity()).get(ElectricGaugingViewModel.class);
         final ElectricGaugingFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.electric_gauging_fragment, container, false);
-        mViewModel.getElectricState().observe(requireActivity(), new Observer<ElectricState>() {
-            @Override
-            public void onChanged(ElectricState electricState) {
-                Log.d(TAG,"electricState Change");
-                //TODO:
-                binding.textView14.setText(electricState.getAllDayElectric()+"KW/h");
-                binding.textView15.setText(electricState.getWeeklyElectric()+"kW/h");
-                binding.textView16.setText(electricState.getAverageDayElectric()+"KW/h");
-                binding.textView17.setText(electricState.getLastHourElectric()+"KW/h");
-            }
-        });
-
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
-                .build();
-        //最短15分钟
-        workRequest=new PeriodicWorkRequest.Builder(ElectricStateWorker.class,15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance(requireContext()).enqueue(workRequest);
-
-        binding.setData(mViewModel);
-        binding.setLifecycleOwner(this);
-
-        LineChart lineChart = binding.lineChart;
+        LineChart lineChart= binding.lineChart;
         Description description = new Description();
         description.setText("日期");
         description.setTextSize(10);
@@ -118,6 +96,37 @@ public class ElectricGaugingFragment extends Fragment {
         rightYAxis.setAxisMinimum(0f);
         leftYAxis.enableGridDashedLine(10f, 10f, 0f);
         rightYAxis.setDrawGridLines(false);
+
+        mViewModel.getElectricState().observe(requireActivity(), new Observer<ElectricState>() {
+            @Override
+            public void onChanged(ElectricState electricState) {
+                Log.d(TAG,"electricState Change");
+                //TODO:
+                binding.textView14.setText(electricState.getAllDayElectric()+"KW/h");
+                binding.textView15.setText(electricState.getWeeklyElectric()+"kW/h");
+                binding.textView16.setText(electricState.getAverageDayElectric()+"KW/h");
+                binding.textView17.setText(electricState.getLastHourElectric()+"KW/h");
+                lineChart.setData(array2LineData(electricState.getaWeekElectrics()));
+                //通知数据改变
+                lineChart.notifyDataSetChanged();
+                //更新数据
+                lineChart.invalidate();
+            }
+        });
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
+                .build();
+        //最短15分钟
+        workRequest=new PeriodicWorkRequest.Builder(ElectricStateWorker.class,15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(requireContext()).enqueue(workRequest);
+
+        binding.setData(mViewModel);
+        binding.setLifecycleOwner(this);
+
+
         return binding.getRoot();
     }
 
@@ -125,5 +134,18 @@ public class ElectricGaugingFragment extends Fragment {
     public void onDestroy() {
         WorkManager.getInstance().cancelWorkById(workRequest.getId());
         super.onDestroy();
+    }
+
+    private LineData array2LineData(double[] array){
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            entries.add(new Entry(i, (float) (array[i])));
+        }
+        //一个LineDataSet就是一条线
+        LineDataSet lineDataSet = new LineDataSet(entries, "发电量(kW/h)");
+        lineDataSet.setDrawCircles(true);
+        lineDataSet.setValueTextSize(10f);
+        LineData data = new LineData(lineDataSet);
+        return data;
     }
 }
