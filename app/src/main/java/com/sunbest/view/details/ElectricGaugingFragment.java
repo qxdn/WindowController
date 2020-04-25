@@ -9,11 +9,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,22 +28,23 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.sunbest.R;
 import com.sunbest.databinding.ElectricGaugingFragmentBinding;
 import com.sunbest.model.ElectricState;
+import com.sunbest.service.MqttClientService;
+import com.sunbest.service.impl.MqttClientServiceImpl;
 import com.sunbest.util.DateUtil;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
-import com.sunbest.worker.ElectricStateWorker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ElectricGaugingFragment extends Fragment {
     private static final String TAG="ElectricGaugingFragment";
 
     private ElectricGaugingViewModel mViewModel;
 
-    private PeriodicWorkRequest workRequest;
-
-
+    private Handler handler;
+    private Runnable runnable;
+    private long delayTime=60*60*1000;
+    private MqttClientService client= MqttClientServiceImpl.getInstance();
 
     public static ElectricGaugingFragment newInstance() {
         return new ElectricGaugingFragment();
@@ -114,14 +112,19 @@ public class ElectricGaugingFragment extends Fragment {
             }
         });
 
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED) //网络连接状态下进行
-                .build();
-        //最短15分钟
-        workRequest=new PeriodicWorkRequest.Builder(ElectricStateWorker.class,15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance(requireContext()).enqueue(workRequest);
+        handler=new Handler();
+        runnable=new Runnable() {
+            @Override
+            public void run() {
+                if(client.isConnected()){
+                    client.toGetElectricState();
+                }
+                //持续进行
+                handler.postDelayed(this, delayTime);
+            }
+        };
+        //10ms后启动
+        handler.postDelayed(runnable, 10);
 
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
@@ -132,7 +135,7 @@ public class ElectricGaugingFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        WorkManager.getInstance().cancelWorkById(workRequest.getId());
+        handler.removeCallbacks(runnable);
         super.onDestroy();
     }
 

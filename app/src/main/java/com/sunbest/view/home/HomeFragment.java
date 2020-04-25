@@ -71,7 +71,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        binding.switch1.setChecked(true);
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

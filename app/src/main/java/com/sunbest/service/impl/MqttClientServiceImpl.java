@@ -3,6 +3,7 @@ package com.sunbest.service.impl;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.sunbest.listener.MqttMessageListener;
 import com.sunbest.model.ElectricState;
 import com.sunbest.model.HardwareState;
@@ -219,12 +220,12 @@ public class MqttClientServiceImpl implements MqttClientService {
      * @return
      */
     private ElectricState convertElectricState(String msg){
-        //TODO:信息转换 先使用假数据
-        ElectricState electricState=new ElectricState();
-        electricState.setAllDayElectric(123.3);
-        electricState.setAverageDayElectric(50.3);
-        electricState.setaWeekElectrics(new double[]{30.3,40.3,20.6,40.5,50.3,30.3,40.3});
-        electricState.setWeeklyElectric(40.3);
+//        ElectricState electricState=new ElectricState();
+//        electricState.setAllDayElectric(123.3);
+//        electricState.setAverageDayElectric(50.3);
+//        electricState.setaWeekElectrics(new double[]{30.3,40.3,20.6,40.5,50.3,30.3,40.3});
+//        electricState.setWeeklyElectric(40.3);
+        ElectricState electricState=new Gson().fromJson(msg,ElectricState.class);
         return electricState;
     }
 
@@ -235,17 +236,19 @@ public class MqttClientServiceImpl implements MqttClientService {
      */
     private RoofState convertRoofState(String msg) {
         //TODO:
-        RoofState roofState=new RoofState();
-        roofState.setElectricState("正常");
-        roofState.setRuntime("4时3分");
-        List<WindowsState> windowsStateList=new ArrayList<>();
-        for(int i=0;i<5;i++){
-            WindowsState windowsState=new WindowsState();
-            windowsState.setSwitchState(true);
-            windowsState.setWorkState(true);
-            windowsStateList.add(windowsState);
-        }
-        roofState.setWindowsStates(windowsStateList);
+//        RoofState roofState=new RoofState();
+//        roofState.setElectricState("正常");
+//        roofState.setRuntime("4时3分");
+//        List<WindowsState> windowsStateList=new ArrayList<>();
+//        for(int i=0;i<5;i++){
+//            WindowsState windowsState=new WindowsState();
+//            windowsState.setSwitchState(true);
+//            windowsState.setWorkState(true);
+//            windowsStateList.add(windowsState);
+//        }
+//        roofState.setWindowsStates(windowsStateList);
+//        Log.i(TAG, new Gson().toJson(roofState));
+        RoofState roofState=new Gson().fromJson(msg,RoofState.class);
         return roofState;
     }
 
@@ -255,24 +258,7 @@ public class MqttClientServiceImpl implements MqttClientService {
      * @return
      */
     private HardwareState convertHardwareState(String msg){
-        HardwareState hardwareState=new HardwareState();
-        try {
-            String[] temp=msg.split(",");
-            int work=Integer.parseInt(temp[0]);
-            int smart=Integer.parseInt(temp[1]);
-            hardwareState=new HardwareState();
-            hardwareState.setSmarted(int2bool(smart));
-            hardwareState.setWorked(int2bool(work));
-        } catch (Exception e) {
-            Log.e(TAG, "convertHardwareState: ",e);
-        }
+        HardwareState hardwareState=new Gson().fromJson(msg,HardwareState.class);
         return  hardwareState;
-    }
-    private boolean int2bool(int num){
-        if(num!=0){
-            return true;
-        }else {
-            return false;
-        }
     }
 }
