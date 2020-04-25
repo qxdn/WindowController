@@ -1,10 +1,12 @@
 package com.sunbest.view.login;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -82,7 +84,7 @@ public class LoginFragment extends Fragment {
                     public void onFailure(Call call, IOException e) {
                         Log.i(TAG,"failure");
                         Looper.prepare();
-                        Toast.makeText(requireContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                        showCancelableDialog("错误","登录失败",R.drawable.nofig2);
                         Looper.loop();
                     }
 
@@ -99,7 +101,7 @@ public class LoginFragment extends Fragment {
                             controller.navigate(R.id.action_loginFragment_to_homeFragment);
                         }else {
                             Looper.prepare();
-                            Toast.makeText(requireContext(),"用户名或者密码错误",Toast.LENGTH_SHORT).show();
+                            showCancelableDialog("错误","用户名或密码错误",R.drawable.nofig2);
                             Looper.loop();
                         }
                     }
@@ -115,7 +117,20 @@ public class LoginFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        // TODO: Use the ViewModel
+
     }
 
+
+    private void showCancelableDialog(String title,String msg,int iconId){
+        new AlertDialog.Builder(requireContext()).setTitle(title)
+                .setMessage(msg)
+                .setIcon(iconId)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
 }

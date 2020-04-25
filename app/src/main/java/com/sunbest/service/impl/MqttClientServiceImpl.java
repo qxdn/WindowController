@@ -258,14 +258,21 @@ public class MqttClientServiceImpl implements MqttClientService {
         HardwareState hardwareState=new HardwareState();
         try {
             String[] temp=msg.split(",");
-            boolean work=Boolean.parseBoolean(temp[0]);
-            boolean smart=Boolean.parseBoolean(temp[1]);
+            int work=Integer.parseInt(temp[0]);
+            int smart=Integer.parseInt(temp[1]);
             hardwareState=new HardwareState();
-            hardwareState.setSmarted(smart);
-            hardwareState.setWorked(work);
+            hardwareState.setSmarted(int2bool(smart));
+            hardwareState.setWorked(int2bool(work));
         } catch (Exception e) {
             Log.e(TAG, "convertHardwareState: ",e);
         }
         return  hardwareState;
+    }
+    private boolean int2bool(int num){
+        if(num!=0){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

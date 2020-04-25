@@ -38,10 +38,10 @@ public class WeatherServiceImpl implements WeatherService {
         //获取常规天气
         HeWeather.getWeatherNow(context, new HeWeather.OnResultWeatherNowBeanListener() {
             Weather weather=new Weather();
-
             @Override
             public void onError(Throwable throwable) {
                 Log.e(TAG,"WeatherNow getError：",throwable);
+                setFailureWeather(weather);
                 weatherListener.onGetWeather(weather);
             }
 
@@ -65,6 +65,7 @@ public class WeatherServiceImpl implements WeatherService {
                     String status = now.getStatus();
                     Code code = Code.toEnum(status);
                     Log.i(TAG, "failed code: " + code);
+                    setFailureWeather(weather);
                 }
                 weatherListener.onGetWeather(weather);
             }
@@ -79,6 +80,7 @@ public class WeatherServiceImpl implements WeatherService {
             @Override
             public void onError(Throwable throwable) {
                 Log.e(TAG,"AirNow getError：",throwable);
+                setFailureAir(air);
                 airListener.onGetAir(air);
             }
 
@@ -100,9 +102,24 @@ public class WeatherServiceImpl implements WeatherService {
                     String status = airNow.getStatus();
                     Code code = Code.toEnum(status);
                     Log.i(TAG, "AirNow failed code: " + code);
+                    setFailureAir(air);
                 }
                 airListener.onGetAir(air);
             }
         });
+    }
+
+    private void setFailureWeather(Weather weather){
+        weather.setPnpc("未知");
+        weather.setTemp("未知");
+        weather.setState("未知");
+        weather.setWind_dir("未知");
+        weather.setWind_sc("未知");
+    }
+
+    private void setFailureAir(Air air){
+        air.setAqi("未知");
+        air.setPm10("未知");
+        air.setPm25("未知");
     }
 }
