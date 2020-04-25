@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.sunbest.listener.MqttMessageListener;
 import com.sunbest.model.ElectricState;
+import com.sunbest.model.HardwareState;
 import com.sunbest.model.MqttSetting;
 import com.sunbest.model.RoofState;
 import com.sunbest.model.WindowsState;
@@ -28,12 +29,14 @@ public class MqttClientServiceImpl implements MqttClientService {
     //mqtt服务器位置
     private String host="tcp://101.133.235.188:1883";
     //订阅信息
-    private String[] subTopics=new String[]{"electric","roof"};
+    private String[] subTopics=new String[]{"electric","roof","hardwareState"};
     //发布信息主题
     private String angleTopic="angle";
     private String windowsTopic="windows";
     private String RequestRoofTopic="getRoof";
     private String RequestElectricTopic="getElectric";
+    private String emergencyTopic="emergency";
+    private String smartTopic="smart";
     //mqttClient
     private MqttAndroidClient client;
     //回调
@@ -85,7 +88,7 @@ public class MqttClientServiceImpl implements MqttClientService {
                 Log.d(TAG, "messageArrived: topic:"+topic+",message:"+message);
                 Log.i(TAG, "messageArrived");
                 //TODO: 处理返回的消息
-                convertMessage(topic,message.getPayload().toString());
+                convertMessage(topic,message.toString());
             }
 
             @Override
@@ -142,6 +145,16 @@ public class MqttClientServiceImpl implements MqttClientService {
         return client.isConnected();
     }
 
+    @Override
+    public void emergency() {
+        publish(emergencyTopic,"true");
+    }
+
+    @Override
+    public void setSmartControl(boolean isSmart) {
+        publish(smartTopic,isSmart+"");
+    }
+
     /**
      *  发送mqtt消息
      * @param topic 主题
@@ -192,6 +205,10 @@ public class MqttClientServiceImpl implements MqttClientService {
                 RoofState roofState=convertRoofState(msg);
                 mqttMessageListener.onRoofStateArrived(roofState);
                 break;
+            case "hardwareState":
+                HardwareState hardwareState=convertHardwareState(msg);
+                mqttMessageListener.onHardwareStateArrived(hardwareState);
+                break;
             default:break;
         }
     }
@@ -230,5 +247,25 @@ public class MqttClientServiceImpl implements MqttClientService {
         }
         roofState.setWindowsStates(windowsStateList);
         return roofState;
+    }
+
+    /**
+     * 逗号分隔 第一个为工作状态   第二个为是否智能控制
+     * @param msg
+     * @return
+     */
+    private HardwareState convertHardwareState(String msg){
+        HardwareState hardwareState=new HardwareState();
+        try {
+            String[] temp=msg.split(",");
+            boolean work=Boolean.parseBoolean(temp[0]);
+            boolean smart=Boolean.parseBoolean(temp[1]);
+            hardwareState=new HardwareState();
+            hardwareState.setSmarted(smart);
+            hardwareState.setWorked(work);
+        } catch (Exception e) {
+            Log.e(TAG, "convertHardwareState: ",e);
+        }
+        return  hardwareState;
     }
 }

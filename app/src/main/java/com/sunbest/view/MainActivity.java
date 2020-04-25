@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,12 +13,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.sunbest.R;
 import com.sunbest.listener.MqttMessageListener;
 import com.sunbest.model.ElectricState;
+import com.sunbest.model.HardwareState;
 import com.sunbest.model.MqttSetting;
 import com.sunbest.model.RoofState;
 import com.sunbest.service.MqttClientService;
 import com.sunbest.service.impl.MqttClientServiceImpl;
 import com.sunbest.util.IDUtil;
 import com.sunbest.viewmodel.ElectricGaugingViewModel;
+import com.sunbest.viewmodel.HomeViewModel;
 import com.sunbest.viewmodel.WorkStateViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private WorkStateViewModel workStateViewModel;
     private ElectricGaugingViewModel electricGaugingViewModel;
+    private HomeViewModel homeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         workStateViewModel= ViewModelProviders.of(this).get(WorkStateViewModel.class);
         electricGaugingViewModel=ViewModelProviders.of(this).get(ElectricGaugingViewModel.class);
+        homeViewModel=ViewModelProviders.of(this).get(HomeViewModel.class);
 
         MqttClientService client= MqttClientServiceImpl.getInstance();
         MqttSetting setting=new MqttSetting();
@@ -64,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onElectricStateArrived(ElectricState electricState) {
                 electricGaugingViewModel.getElectricState().postValue(electricState);
+            }
+
+            @Override
+            public void onHardwareStateArrived(HardwareState hardwareState) {
+                homeViewModel.getHardwareState().postValue(hardwareState);
             }
         });
     }

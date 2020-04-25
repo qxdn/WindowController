@@ -44,5 +44,13 @@ public interface MqttClientService {
      */
     public void toGetElectricState();
 
+    /**
+     * 一键应急
+     */
+    public void emergency();
 
+    /**
+     * 智能控制
+     */
+    public void setSmartControl(boolean isSmart);
 }

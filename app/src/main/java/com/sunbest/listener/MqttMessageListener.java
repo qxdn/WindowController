@@ -1,7 +1,10 @@
 package com.sunbest.listener;
 
 
+import androidx.annotation.Nullable;
+
 import com.sunbest.model.ElectricState;
+import com.sunbest.model.HardwareState;
 import com.sunbest.model.RoofState;
 
 /**
@@ -21,4 +24,9 @@ public interface MqttMessageListener {
      */
     public void onElectricStateArrived(ElectricState electricState);
 
+    /**
+     * 硬件是否智能控制等
+     * @param hardwareState
+     */
+    public void onHardwareStateArrived(HardwareState hardwareState);
 }

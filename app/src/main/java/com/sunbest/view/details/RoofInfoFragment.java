@@ -124,7 +124,7 @@ public class RoofInfoFragment extends Fragment {
 
     private void openGPS(){
         new AlertDialog.Builder(requireContext()).setTitle("需要定位功能")
-                .setMessage("天气信息需要您当前的未知")
+                .setMessage("天气信息需要您当前的位置")
                 //  取消选项
                 .setNegativeButton("取消",new DialogInterface.OnClickListener(){
 

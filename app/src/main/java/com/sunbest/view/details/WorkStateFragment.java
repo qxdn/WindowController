@@ -77,10 +77,14 @@ public class WorkStateFragment extends Fragment {
             }
         });
 
-        binding.switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.switch2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //TODO: 发送硬件
+            public void onClick(View v) {
+                boolean isChecked=binding.switch2.isChecked();
+                int index=binding.windowsSpinner1.getSelectedIndex();
+                if(client.isConnected()){
+                    client.controlWindows(index,isChecked);
+                }
             }
         });
         /**
