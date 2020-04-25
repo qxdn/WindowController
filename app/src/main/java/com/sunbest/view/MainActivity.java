@@ -1,14 +1,14 @@
 package com.sunbest.view;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.widget.Toast;
 import com.sunbest.R;
 import com.sunbest.listener.MqttMessageListener;
 import com.sunbest.model.ElectricState;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             };
             ActivityCompat.requestPermissions(this, permissions, PRIVATE_CODE);
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 

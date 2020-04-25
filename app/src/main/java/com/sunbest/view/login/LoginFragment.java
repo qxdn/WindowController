@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -42,8 +43,7 @@ public class LoginFragment extends Fragment {
     private LoginViewModel mViewModel;
     private LoginFragmentBinding binding;
     private static final String TAG="LoginFragment";
-
-    private UserCenterViewModel userCenterViewModel;
+    private String url;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -52,8 +52,10 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        userCenterViewModel=ViewModelProviders.of(getActivity()).get(UserCenterViewModel.class);
+        final SharedPreferences pref =requireActivity().getSharedPreferences("userinfo",requireActivity().MODE_PRIVATE);
+        url=getString(R.string.remoteServer);
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false);
+        binding.editTextUserName.setText(pref.getString("email",""));
         binding.setData(mViewModel);
         binding.setLifecycleOwner(this);
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +73,7 @@ public class LoginFragment extends Fragment {
                         .build();
 
                 Request request=new Request.Builder()
-                        .url("http://101.133.235.188:80/api/v1/androidLogin")
+                        .url(url+"/api/v1/androidLogin")
                         .post(requestBody)
                         .build();
 
@@ -90,7 +92,9 @@ public class LoginFragment extends Fragment {
                         String json=response.body().string();
                         Log.i(TAG, "onResponse: "+json);
                         if(json.equals("true")){
-                            userCenterViewModel.setEmail(new MutableLiveData<String>(email));
+                            SharedPreferences.Editor editor=pref.edit();
+                            editor.putString("email",email);
+                            editor.apply();
                             NavController controller = Navigation.findNavController(v);
                             controller.navigate(R.id.action_loginFragment_to_homeFragment);
                         }else {

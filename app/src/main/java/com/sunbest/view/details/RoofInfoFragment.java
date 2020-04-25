@@ -1,9 +1,12 @@
 package com.sunbest.view.details;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +28,15 @@ import com.sunbest.model.Air;
 import com.sunbest.model.Weather;
 import com.sunbest.service.WeatherService;
 import com.sunbest.service.impl.WeatherServiceImpl;
+
+import com.sunbest.util.LocationUtil;
 import com.sunbest.viewmodel.RoofInfoViewModel;
-import java.util.Objects;
 
 
 public class RoofInfoFragment extends Fragment {
     private static final String TAG="RoofInfoFragment";
+
+    private int GPS_REQUEST_CODE = 1;
 
     private RoofInfoViewModel mViewModel;
 
@@ -49,6 +56,11 @@ public class RoofInfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if(!LocationUtil.isLocationOpen(requireContext())){
+            //GPS未打开
+            openGPS();
+        }
+
         mViewModel = ViewModelProviders.of(getActivity()).get(RoofInfoViewModel.class);
         final RoofInfoFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.roof_info_fragment, container, false);
         mViewModel.getWeather().observe(requireActivity(), new Observer<Weather>() {
@@ -108,5 +120,35 @@ public class RoofInfoFragment extends Fragment {
         Log.i(TAG,TAG+ "onDestroy");
         handler.removeCallbacks(runnable);
         super.onDestroy();
+    }
+
+    private void openGPS(){
+        new AlertDialog.Builder(requireContext()).setTitle("需要定位功能")
+                .setMessage("天气信息需要您当前的未知")
+                //  取消选项
+                .setNegativeButton("取消",new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 关闭dialog
+                        dialogInterface.dismiss();
+                    }
+                })
+                //  确认选项
+                .setPositiveButton("前去开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //跳转到手机原生设置页面
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent,GPS_REQUEST_CODE);
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
